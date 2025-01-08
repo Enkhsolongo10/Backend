@@ -1,8 +1,11 @@
-const express = require("express");
+const express = require("express")
+const cors = require("cors")
 const fs = require("node:fs");
 const app = express();
-const port = 3000;
+const port = 4000;
 
+
+app.use(cors()); 
 app.get("/", (req, res) => {
     res.send("Hello world!");
 });
@@ -11,8 +14,8 @@ function createNewMovie(req, res){
     console.log(req.query);
 };
 
-app.get("/movies/", (req, res) => {
-    const data = fs.readFileSync("data/movies.txt","utf8");
+app.get("/movies", (req, res) => {
+    const data = fs.readFileSync("data/movies.json","utf8");
     const movies = JSON.parse(data);
     res.json(movies);
 });
@@ -28,18 +31,18 @@ app.get("/movies/create", (req, res) => {
     const { name } = req.query;
 
     // 1. read json from file
-    const data = fs.readFileSync("data/movie.tsx", "utf8");
+    const data = fs.readFileSync("data/movies.json", "utf8");
     const movies = JSON.parse(data);
 
     // 2. push to json array 
     movies.push({
         id: Date.now(),
-        name,
+        name:"dashka"
     });
  
     // 3. write json to file 
     const moviesString = JSON.stringify(movies, null, 4);
-    fs.writeFileSync("data/movies.txt", moviesString);
+    fs.writeFileSync("data/movies.json", moviesString);
 
     res.json( {message: "Success!"});
 });
@@ -53,7 +56,7 @@ app.get("/movies/update", (req, res) => {
 
 app.get("/movies/delete", (req, res) => {
     const id = req.query.id 
-    const data = fs.readFileSync("data/movie.tsx", "utf8");
+    const data = fs.readFileSync("data/movie.json", "utf8");
     const movies = JSON.parse(data);
     const content = movies.filter((movie) => {
         if(movie.id == id){
