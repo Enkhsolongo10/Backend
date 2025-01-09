@@ -4,88 +4,76 @@ const fs = require("node:fs");
 const app = express();
 const port = 4000;
 
+app.use(express.json());
+app.use(cors());
 
-app.use(cors()); 
-app.get("/", (req, res) => {
-    res.send("Hello world!");
-});
-
-function createNewMovie(req, res){
-    console.log(req.query);
+const findById = (req, res) => {
+    const movieId = req.params.id;
+    const data = fs.readFileSync("data/movies.json");
+    const movies = JSON.parse(data);
+    const movie = movies.find((movie) => movie.id === Number(movieId))
+    res.send(movie); 
 };
 
+
+
+//READ DONE
 app.get("/movies", (req, res) => {
-    const data = fs.readFileSync("data/movies.json","utf8");
+    const data = fs.readFileSync("data/movies.json");
     const movies = JSON.parse(data);
     res.json(movies);
 });
 
-app.get("/movies/details", (req, res) => {
-    //read one movie
-});
-
-app.get("/movies/create", (req, res) => {
-    console.log(req.query);
-
-    //const name = req.query.name;
-    const { name } = req.query;
-
-    // 1. read json from file
-    const data = fs.readFileSync("data/movies.json", "utf8");
+//CREATE DONE 
+app.post("/create", (req, res) => {
+    const body = req.body;
+    const date = Date.now();
+    const data = fs.readFileSync("data/movies.json");
     const movies = JSON.parse(data);
-
-    // 2. push to json array 
-    movies.push({
-        id: Date.now(),
-        name:"dashka"
-    });
- 
-    // 3. write json to file 
-    const moviesString = JSON.stringify(movies, null, 4);
-    fs.writeFileSync("data/movies.json", moviesString);
-
-    res.json( {message: "Success!"});
+    const newData = {
+        id: date,
+        ...body,
+    };
+    movies.push(newData);
+    const content = JSON.stringify(movies, null, 4);
+    fs.writeFileSync("data/movies.json", content);
+    res.send(content); 
 });
 
-app.get("/movies/update", (req, res) => {
-    // 1. read json from file
-    // 2. find the item 
-    // 3. update the json array
-    // 4. write json to file 
-}); 
 
-app.get("/movies/delete", (req, res) => {
-    const id = req.query.id 
-    const data = fs.readFileSync("data/movie.json", "utf8");
+//DELETE DONE
+app.delete("/delete", (req, res) => {
+    const id = params.req.id;
+    const data = fs.readFileSync("data/movies.json");
     const movies = JSON.parse(data);
     const content = movies.filter((movie) => {
-        if(movie.id == id){
-            return
-        }
-        else{
-            return movie
+        if (movie.id == id)
+            return;
+        else {
+            return movie;
         }
     });
-    const contentJSON = JSON.stringify(content)
-    fs.writeFileSync("data/movies.json", contentJSON)
-    res.send("hiii")
+    const contentJSON = JSON.stringify(content, null, 4);
+    fs.writeFileSync("data/movies.json", contentJSON); 
+    res.send("done");
 });
 
-app.listen( port, () => {
-    console.log(`read, http://localhost:${port}`);
-    console.log(`create, http://localhost:${port}`);
-    console.log(`update, http://localhost:${port}`);
-    console.log(`delete, http://localhost:${port}`);
-}); 
+app.listen(port, ()=>{
+    console.log("Backend started on ", port)
+})
 
-// // find by id
-// app.get('movies/:id', findById);
 
-// // delete by id
-// app.delete('movies/:id', deleteById);
 
-// // push by id 
-// app.put('movies/:id', pushById);
+//post --> create buyu write
+//put --> update buyu edit
 
-// //
-// app.post('movies/:id', findById);
+//REST-iin API hugjuulj surch bga 
+
+
+// Huseltuud --> 
+// GET 
+// POST --> tsoo shinner uusgene
+// GET 
+// PUT --> 
+// PATCH --> 
+// DELETE
