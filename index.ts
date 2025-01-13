@@ -26,14 +26,14 @@ const findById = (req: Request, res: Response) => {
 
 
 //READ DONE
-app.get("/movies", (req, res) => {
+app.get("/movies", (req: Request, res: Response) => {
     const data = fs.readFileSync("data/movies.json");
     const movies = JSON.parse(data);
     res.json(movies);
 });
 
 //CREATE DONE 
-app.post("/create", (req, res) => {
+app.post("/create", (req: Request, res: Response) => {
     const body = req.body;
     const date = Date.now();
     const data = fs.readFileSync("data/movies.json");
@@ -50,7 +50,7 @@ app.post("/create", (req, res) => {
 
 
 //DELETE DONE
-app.delete("/delete/:id", (req, res) => {
+app.delete("/delete/:id", (req: Request, res: Response) => {
     const id = req.params.id;
 
     console.log(id,"---")
@@ -71,7 +71,7 @@ app.delete("/delete/:id", (req, res) => {
 });
 
 //UPDATE 
-app.put("/update", (req: Request, res) => {
+app.put("/update", (req: Request, res: Response) => {
     const id = req.params.id;
     const data = fs.readFileSync("data/movies.json");
     const movies = JSON.parse(data);
